@@ -26,6 +26,9 @@ public class UpgradeItem : MonoBehaviour {
 	[Tooltip("How much will this upgrade cost?")]
 	public int cost;
 
+	[Tooltip("Unlock requirement")]
+	public int requirement;
+
 	[Tooltip("If purchased, how much will be added?")]
 	public float multiplierAmount;
 
@@ -35,11 +38,18 @@ public class UpgradeItem : MonoBehaviour {
 
 	private GameController controller;
 	private Button button;
+	private bool bought;
+	private float updateTimer = 1; //run the update 1 time every second.
+
 
 	// Use this for initialization
 	void Start () {
+		bought = false;
+
 		costText.text = "$" + cost.ToString ();
 		descText.text = descName;
+
+
 
 		button = transform.GetComponent<Button> ();
 
@@ -52,9 +62,17 @@ public class UpgradeItem : MonoBehaviour {
 
 	// Update is called once per frame
 	private void Update () {
-		button.interactable = (controller.CurrentTris >= cost);
+		//To check if it exists Should be limited to once per second.
+		updateTimer -= Time.deltaTime;
+		if ((bought == false) && (updateTimer <= 0)) {
+			Debug.Log ("Updates");
+			updateTimer = 1;
+			button.interactable = (controller.CurrentTris >= cost);
+		}
 	}
 
+	//When the Button is clicked do this
+	//What type of button was clicked and where to add the new value
 	public void ButtonClicked(){
 		controller.CurrentTris -= cost;
 		switch(upgradeType){
@@ -100,9 +118,57 @@ public class UpgradeItem : MonoBehaviour {
 
 
 		}
+		bought = true;
 
 		controller.Recalculate ();
 
 		gameObject.SetActive(false);
+	}
+
+	//dont know what i will do with this yet
+	//Maybe use it to check the requirement to  unlock the upgrade
+	private bool CheckRequirement(UpgradeType upgradeTypes){
+		switch (upgradeTypes) {
+		case UpgradeType.ClickingMulti:
+			// return controller.clicking;
+			break;
+
+		case UpgradeType.ProgrammerMulti:
+			controller.programmerMP *= multiplierAmount;
+			break;
+
+		case UpgradeType.BasementMulti:
+			controller.basementMP *= multiplierAmount;
+			break;
+
+		case UpgradeType.ArtistMulti:
+			controller.artistMP *= multiplierAmount;
+			break;
+
+		case UpgradeType.OvertimeMulti:
+			controller.overworkMP *= multiplierAmount;
+			break;
+
+		case UpgradeType.OfficeMulti:
+			controller.officeMP *= multiplierAmount;
+			break;
+
+		case UpgradeType.HappyHourMulti:
+			controller.happyHourMP *= multiplierAmount;
+			break;
+
+		case UpgradeType.RenderFarmMulti:
+			controller.renderFarmsMP *= multiplierAmount;
+			break;
+
+		case UpgradeType.QuantumComputerMulti:
+			controller.quantumComputersMP *= multiplierAmount;
+			break;
+
+		case UpgradeType.FullDiveVRMulti:
+			controller.fullDiveVRMP *= multiplierAmount;
+			break;
+		}
+		return true;
 	}
 }
