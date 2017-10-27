@@ -13,7 +13,8 @@ public enum UpgradeType{
 	HappyHourMulti,
 	RenderFarmMulti,
 	QuantumComputerMulti,
-	FullDiveVRMulti
+	FullDiveVRMulti,
+	GameMulti
 
 }
 
@@ -44,14 +45,16 @@ public class UpgradeItem : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
 		bought = false;
-
 		costText.text = "$" + cost.ToString ();
 		descText.text = descName;
 
-
-
+		//Reference this
 		button = transform.GetComponent<Button> ();
+
+		//It Looks a little bit better if it starts as not interactable
+		button.interactable = false;
 
 		//executes the ButtonClicked function when we click the button
 		button.onClick.AddListener(this.ButtonClicked);
@@ -67,7 +70,9 @@ public class UpgradeItem : MonoBehaviour {
 		if ((bought == false) && (updateTimer <= 0)) {
 			Debug.Log ("Updates");
 			updateTimer = 1;
-			button.interactable = (controller.CurrentTris >= cost);
+
+			float tempTri = controller.CurrentTris;
+			button.interactable = (tempTri >= cost);
 		}
 	}
 
@@ -115,6 +120,11 @@ public class UpgradeItem : MonoBehaviour {
 		case UpgradeType.FullDiveVRMulti:
 			controller.fullDiveVRMP *= multiplierAmount;
 			break;
+
+		case UpgradeType.GameMulti:
+			controller.gameMP += multiplierAmount;
+			break;
+			
 
 
 		}

@@ -66,6 +66,8 @@ public class GameController : MonoBehaviour {
 	public float quantumComputersMP = 1f;
 	public float fullDiveVRMP = 1f;
 
+	public float gameMP = 0f;
+
 
 	public float cheatMP = 1000f;
 
@@ -119,6 +121,8 @@ public class GameController : MonoBehaviour {
 		triTemp += renderFarms * renderFarmsMP;
 		triTemp += quantumComputers * quantumComputersMP;
 		triTemp += fullDiveVR * fullDiveVRMP;
+
+		triTemp += triTemp * gameMP;
 
 		if (cheatBool == true) {
 			triTemp = triTemp * cheatMP;
